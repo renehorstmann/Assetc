@@ -10,7 +10,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-long-long -pedantic -Wno-unused-f
 add_executable(assetc
         src/main.c
         src/generate.c
-        src/load.c
+        src/file.c
         )
 
 

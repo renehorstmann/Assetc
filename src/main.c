@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "generate.h"
-#include "load.h"
+#include "file.h"
 
 int main() {
 

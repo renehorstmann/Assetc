@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "utilc/alloc.h"
-#include "load.h"
+#include "file.h"
 
 void File_kill(File *self) {
     Free0(self->name);
