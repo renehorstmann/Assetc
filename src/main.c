@@ -7,6 +7,7 @@
 #include "file.h"
 #include "load.h"
 #include "apply.h"
+#include "asset.h"
 
 void print_help(const char *name) {
     fprintf(stderr, "Usage: %s [-h] [-o name] file1|dir1 [file2|dir2 ...]\n"
@@ -14,23 +15,6 @@ void print_help(const char *name) {
                     "  -h will clone asset.h into the current dir (will get the name from -o)",
                     name);
     exit(EXIT_FAILURE);
-}
-
-static void open_file_as_string(char **out_string, size_t *out_size, const char *filename) {
-    char *text = NULL;
-    FILE *file = fopen(filename, "rb");
-    long length = 0;
-    if (file) {
-        fseek(file, 0, SEEK_END);
-        length = ftell(file);
-        fseek(file, 0, SEEK_SET);
-        text = malloc(length);
-        if (text)
-            fread(text, 1, length, file);
-        fclose(file);
-    }
-    *out_string = text;
-    *out_size = length;
 }
 
 int main(int argc, char **argv) {
@@ -61,16 +45,10 @@ int main(int argc, char **argv) {
     size_t files_size = 0;
     load_files(&files, &files_size, file_names, file_names_size);
 
-    char *template;
-    size_t template_size = 0;
-    open_file_as_string(&template, &template_size, "../src/asset_template.txt");
-
-
     if(clone_header) {
-        char *header;
-        size_t header_size = 0;
-        open_file_as_string(&header, &header_size, "../example/asset.h");
-        assert(header);
+        asset template = asset_get("template_header.txt");
+        assert(template.data);
+        char *header = apply_header(template.data, out_name);
 
         char *name = New(char, strlen(out_name) + 3); // + .h\0
         strcpy(name, out_name);
@@ -85,8 +63,9 @@ int main(int argc, char **argv) {
     }
 
     {
-        char *source = apply_source(template, out_name, files, files_size);
-        assert(source);
+        asset template = asset_get("template_source.txt");
+        assert(template.data);
+        char *source = apply_source(template.data, out_name, files, files_size);
 
         char *name = New(char, strlen(out_name) + 3); // + .c\0
         strcpy(name, out_name);

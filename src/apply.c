@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <stdio.h>
 
 #include "utilc/alloc.h"
 #include "utilc/dynarray.h"
@@ -41,6 +42,7 @@ char *apply_header(const char *template, const char *name) {
 
     push_strviu(&res, next);
 
+    StrArray_push(&res, '\0');
     return res.array;
 }
 
@@ -64,6 +66,14 @@ char *apply_source(const char *template, const char *name, const File *files, si
     next.begin += strlen("@file_init");
 
     push_strviu(&res, tmp);
+
+
+    char size_str[12]; // max length for an 32 bit int
+    sprintf(size_str, "%zu", files_size);
+    push_string(&res, "#define FILES_SIZE ");
+    push_string(&res, size_str);
+    push_string(&res, "\n");
+
     for(int i=0; i < files_size; i++) {
         char *init = generate_file_init_on_heap(i, files[i].name, files[i].data, files[i].size);
         push_string(&res, init);
@@ -96,5 +106,6 @@ char *apply_source(const char *template, const char *name, const File *files, si
 
     push_strviu(&res, next);
 
+    StrArray_push(&res, '\0');
     return res.array;
 }

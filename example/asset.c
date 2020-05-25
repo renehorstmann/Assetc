@@ -36,12 +36,7 @@ typedef struct llist {
     struct llist *next;
 } llist;
 
-#define LLIST_INIT(name, data) \
-{ \
-    .key = name, \
-    .value = (asset) {data, sizeof(data) -1},\
-    .next = NULL \
-}
+#define LLIST_INIT(name, data) {name, {data, sizeof(data) -1}, NULL}
 
 
 // hash map -> array of linked list of asset (so if to items got the same hash, they end up in the list)

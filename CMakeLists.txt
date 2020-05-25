@@ -13,6 +13,7 @@ add_executable(assetc
         src/file.c
         src/load.c
         src/apply.c
+        src/asset.c
         )
 
 
