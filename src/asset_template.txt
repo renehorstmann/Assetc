@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "asset.h"
+@include_asset_h
 
 
 @file_init
