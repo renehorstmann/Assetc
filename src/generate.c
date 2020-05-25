@@ -6,7 +6,7 @@
 
 DynArray(char, StrArray)
 
-void push_string(StrArray *array, const char *str) {
+static void push_string(StrArray *array, const char *str) {
     StrArray_push_array(array, str, strlen(str));
 }
 

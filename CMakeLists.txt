@@ -12,6 +12,7 @@ add_executable(assetc
         src/generate.c
         src/file.c
         src/load.c
+        src/apply.c
         )
 
 

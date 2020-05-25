@@ -5,6 +5,7 @@
 #include "generate.h"
 #include "file.h"
 #include "load.h"
+#include "apply.h"
 
 void print_help(const char *name) {
     fprintf(stderr, "Usage: %s [-h] [-o name] file1|dir1 [file2|dir2 ...]\n"
@@ -12,6 +13,23 @@ void print_help(const char *name) {
                     "  -h will clone asset.h into the current dir (will get the name from -o)",
                     name);
     exit(EXIT_FAILURE);
+}
+
+static void open_file_as_string(char **out_string, size_t *out_size, const char *filename) {
+    char *text = NULL;
+    FILE *file = fopen(filename, "rb");
+    long length = 0;
+    if (file) {
+        fseek(file, 0, SEEK_END);
+        length = ftell(file);
+        fseek(file, 0, SEEK_SET);
+        text = malloc(length);
+        if (text)
+            fread(text, 1, length, file);
+        fclose(file);
+    }
+    *out_string = text;
+    *out_size = length;
 }
 
 int main(int argc, char **argv) {
@@ -38,13 +56,16 @@ int main(int argc, char **argv) {
     if(file_names_size == 0)
         print_help(argv[0]);
 
-    char *file = generate_file_init_on_heap(550, "example.txt", "Hello World", 11);
-    char *list = generate_list_init_on_heap(1234);
-    char *map = generate_map_init_on_heap(56880);
-
     File *files;
     size_t files_size = 0;
     load_files(&files, &files_size, file_names, file_names_size);
+
+    char *template;
+    size_t template_size;
+    open_file_as_string(&template, &template_size, "../src/asset_template.txt");
+
+    char *source = apply_template(template, out_name, files, files_size);
+    puts(source);
 
     for(int i=0; i<files_size; i++)
         File_kill(&files[i]);
