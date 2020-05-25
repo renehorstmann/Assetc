@@ -1,6 +1,8 @@
 #ifndef ASSETC_H
 #define ASSETC_H
 
+#include <stdlib.h> // for size_t
+
 /**
  * Simple struct that holds the memory location and size of an compiled asset file.
  * data[size] will be 0, so a text file will be a valid C string.
