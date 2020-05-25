@@ -26,7 +26,7 @@ Compile the generated asset.c file along your C code and use it like so:
 #include "assetc.h"
 int main() {
     asset example = asset_get("example.txt");
-    printf("example data size: %s\n", example.size);
+    printf("example data size: %zu\n", example.size);
     puts(example.data);
 }
 ```
