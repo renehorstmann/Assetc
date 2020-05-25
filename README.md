@@ -78,3 +78,19 @@ int main() {
     //array content: < 0x00  0xff  0x0f  0xf0 >
 }
 ```
+
+## Open asset as FILE
+To get a C FILE handler for an compiled asset, use stdio.h's fmemopen:
+```c
+#include <stdio.h>
+#include "assetc.h"
+
+int main() {
+    asset example = asset_get("example.txt");
+    FILE *file = fmemopen(example.data, example.size, "r");
+    
+    // do smth with the file handle...
+
+    fclose(file);
+}
+```
