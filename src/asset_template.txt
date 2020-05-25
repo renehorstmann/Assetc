@@ -33,7 +33,7 @@ typedef struct llist {
 
 
 // hash map -> array of linked list of asset (so if to items got the same hash, they end up in the list)
-#define MAP_SIZE 2
+#define MAP_SIZE (FILES_SIZE * 2)
 static llist *map[MAP_SIZE];
 
 static void map_add(llist *list_item_ptr, const char *name) {
