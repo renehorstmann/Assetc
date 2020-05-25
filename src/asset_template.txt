@@ -7,7 +7,7 @@
 #include "asset.h"
 
 
-@files
+@file_init
 
 static unsigned hash(const char *key) {
     unsigned hash = 5381;
@@ -53,6 +53,8 @@ static llist *map_get(const char *name) {
 static void map_init() {
     // set all map entries to NULL
     memset(map, 0, sizeof(map));
+
+@list_init
 
 @map_init
 }
