@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "utilc/alloc.h"
 #include "generate.h"
 #include "file.h"
 #include "load.h"
@@ -61,11 +62,43 @@ int main(int argc, char **argv) {
     load_files(&files, &files_size, file_names, file_names_size);
 
     char *template;
-    size_t template_size;
+    size_t template_size = 0;
     open_file_as_string(&template, &template_size, "../src/asset_template.txt");
 
-    char *source = apply_template(template, out_name, files, files_size);
-    puts(source);
+
+    if(clone_header) {
+        char *header;
+        size_t header_size = 0;
+        open_file_as_string(&header, &header_size, "../example/asset.h");
+        assert(header);
+
+        char *name = New(char, strlen(out_name) + 3); // + .h\0
+        strcpy(name, out_name);
+        strcat(name, ".h");
+
+        FILE *file = fopen(name, "w");
+        fprintf(file, "%s", header);
+
+        fclose(file);
+        free(name);
+        free(header);
+    }
+
+    {
+        char *source = apply_template(template, out_name, files, files_size);
+        assert(source);
+
+        char *name = New(char, strlen(out_name) + 3); // + .c\0
+        strcpy(name, out_name);
+        strcat(name, ".c");
+
+        FILE *file = fopen(name, "w");
+        fprintf(file, "%s", source);
+
+        fclose(file);
+        free(name);
+        free(source);
+    }
 
     for(int i=0; i<files_size; i++)
         File_kill(&files[i]);
