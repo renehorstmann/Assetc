@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "assetc.h"
+#include "asset.h"
 
 
 static const char name_0[] = "hello.txt";

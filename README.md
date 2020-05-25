@@ -23,7 +23,7 @@ Compile the generated asset.c file along your C code and use it like so:
 
 ```c
 #include <stdio.h>
-#include "assetc.h"
+#include "asset.h"
 int main() {
     asset example = asset_get("example.txt");
     printf("example data size: %zu\n", example.size);
@@ -47,7 +47,7 @@ Next comes a bigger example, that is still easy:
 ```c
 #include <stdio.h>
 #include <assert.h>
-#include "assetc.h"
+#include "asset.h"
 
 
 /*
@@ -107,7 +107,7 @@ int main() {
 To get a C FILE handler for an compiled asset, use stdio.h's fmemopen:
 ```c
 #include <stdio.h>
-#include "assetc.h"
+#include "asset.h"
 
 int main() {
     asset example = asset_get("example.txt");

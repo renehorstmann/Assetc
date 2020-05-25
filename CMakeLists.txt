@@ -14,5 +14,5 @@ add_executable(assetc
 
 add_executable(example
         example/main.c
-        example/assetc.c
+        example/asset.c
         )
