@@ -67,7 +67,7 @@ int main() {
     // if .data or .size == 0, the file was not found
     if(!hello.data) {
         fprintf(stderr, "asset hello.txt not found");
-        return EXIT_FAILURE;
+        return 1;
     }
 
     // all files end up with a 0 in memory, so that they are valid C strings
@@ -79,7 +79,7 @@ int main() {
     asset array = asset_get("bin/array.bin");
     if(!array.data) {
         fprintf(stderr, "asset array.bin not found");
-        return EXIT_FAILURE;
+        return 1;
     }
     assert(array.data[array.size] == 0);
     printf("array size: %zu\n", array.size);
