@@ -29,7 +29,7 @@ Compile the generated asset.c file along your C code and use it like so:
 /*
  * The compiled files are:
  * hello.txt -> ["Hello World"]
- * array.bin -> ["\x00\xff\x0f\xf0"]
+ * bin/array.bin -> ["\x00\xff\x0f\xf0"]
  */
 
 int main() {
@@ -49,7 +49,7 @@ int main() {
     printf("hello data: %p\n", (const void *) hello.data);
     printf("hello content: <%s>\n\n", hello.data);
 
-    asset array = asset_get("array.bin");
+    asset array = asset_get("bin/array.bin");
     if(!array.data) {
         fprintf(stderr, "asset array.bin not found");
         return EXIT_FAILURE;
@@ -67,7 +67,7 @@ int main() {
     assert(!not_available.data);
 
     // no need to free up asset
-    
+
     // will print:
     //hello size: 11
     //hello data: 0x55ed90a58000
@@ -77,5 +77,4 @@ int main() {
     //array data: 0x55ed90a5801a
     //array content: < 0x00  0xff  0x0f  0xf0 >
 }
-
 ```

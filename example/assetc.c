@@ -12,7 +12,7 @@ static const char name_0[] = "hello.txt";
 static const char data_0[] =
         "Hello World";
 
-static const char name_1[] = "array.bin";
+static const char name_1[] = "bin/array.bin";
 static const char data_1[] =
         "\x00\xff\x0f\xf0";
 

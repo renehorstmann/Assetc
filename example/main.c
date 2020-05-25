@@ -6,7 +6,7 @@
 /*
  * The compiled files are:
  * hello.txt -> ["Hello World"]
- * array.bin -> ["\x00\xff\x0f\xf0"]
+ * bin/array.bin -> ["\x00\xff\x0f\xf0"]
  */
 
 int main() {
@@ -26,7 +26,7 @@ int main() {
     printf("hello data: %p\n", (const void *) hello.data);
     printf("hello content: <%s>\n\n", hello.data);
 
-    asset array = asset_get("array.bin");
+    asset array = asset_get("bin/array.bin");
     if(!array.data) {
         fprintf(stderr, "asset array.bin not found");
         return EXIT_FAILURE;
