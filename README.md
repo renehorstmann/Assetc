@@ -20,6 +20,30 @@ $ assetc assets_dir
 
 ## Usage of compiled assets
 Compile the generated asset.c file along your C code and use it like so:
+
+```c
+#include <stdio.h>
+#indlude "assetc.h"
+int main() {
+    asset example = asset_get("example.txt");
+    printf("example data size: %s\n", example.size);
+    puts(example.data);
+}
+```
+
+The asset struct is defined as:
+```c
+/**
+ * Simple struct that holds the memory location and size of an compiled asset file.
+ * data[size] will be 0, so a text file will be a valid C string.
+ */
+typedef struct asset {
+    const char *data;
+    size_t size;
+} asset;
+```
+
+Next comes a bigger example, that is still easy:
 ```c
 #include <stdio.h>
 #include <assert.h>
