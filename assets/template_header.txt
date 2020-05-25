@@ -1,5 +1,4 @@
-#ifndef ASSETC_H
-#define ASSETC_H
+@include_quard
 
 #include <stdlib.h> // for size_t
 
@@ -18,4 +17,4 @@ typedef struct asset {
  */
 asset asset_get(const char *file);
 
-#endif //ASSETC_H
+#endif //end of include quard

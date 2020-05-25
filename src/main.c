@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
     }
 
     {
-        char *source = apply_template(template, out_name, files, files_size);
+        char *source = apply_source(template, out_name, files, files_size);
         assert(source);
 
         char *name = New(char, strlen(out_name) + 3); // + .c\0
