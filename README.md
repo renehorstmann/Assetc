@@ -15,6 +15,9 @@ $ assetc example.txt -o asset_file_name.c
 
 $ assetc assets_dir
 # will recursivly compile all files, except of hidden ones, into asset.c
+
+$ assetc -h
+# will copy asset.h into the current dir (asset.h is always the same)
 ```
 
 
