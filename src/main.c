@@ -10,7 +10,7 @@
 #include "asset.h"
 
 void print_help(const char *name) {
-    fprintf(stderr, "Usage: %s [-h] [-o name] file1|dir1 [file2|dir2 ...]\n"
+    fprintf(stderr, "Usage: %s [-h] [-o name] dir\n"
                     "  -o sets the out name for the asset source and header file (default is asset.c|.h)\n"
                     "  -h will clone asset.h into the current dir (will get the name from -o)",
                     name);

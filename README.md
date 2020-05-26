@@ -1,23 +1,17 @@
 # Assetc
-Compile asset files or an asset directory into a C source file.
+Compile an asset directory into a C source file.
 
 
 ## In active development!
 
 ## Compilation of assets
-To compile an asset file or directory, see the examples below:
+To compile an asset directory, see the examples below:
 ```bash
-$ assetc example.txt
-# compiles the content of example.txt into asset.c
-
-$ assetc example.txt hello.jpg
-# compiles both files into asset.c
-
-$ assetc example.txt -o asset_file_name.c
-# -o changes the key of the compiled file
-
 $ assetc assets_dir
-# will recursivly compile all files, except of hidden ones, into asset.c
+# compiles recursivly the content of assets_dir into asset.c
+
+$ assetc assetc_dir -o asset_file_name
+# -o changes the key of the compiled file
 
 $ assetc -h
 # will copy asset.h into the current dir (asset.h is always the same)
