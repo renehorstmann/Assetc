@@ -20,3 +20,4 @@ typedef struct asset {
 asset asset_get(const char *file);
 
 #endif //end of include quard
+
