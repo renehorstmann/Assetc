@@ -1,5 +1,5 @@
 # Assetc
-Compile asset files or whole directories into a C source file
+Compile asset files or an asset directory into a C source file.
 
 
 ## In active development!
@@ -9,6 +9,9 @@ To compile an asset file or directory, see the examples below:
 ```bash
 $ assetc example.txt
 # compiles the content of example.txt into asset.c
+
+$ assetc example.txt hello.jpg
+# compiles both files into asset.c
 
 $ assetc example.txt -o asset_file_name.c
 # -o changes the key of the compiled file
@@ -55,8 +58,9 @@ Next comes a bigger example, that is still easy:
 
 /*
  * The compiled files are:
- * hello.txt -> ["Hello World"]
- * bin/array.bin -> ["\x00\xff\x0f\xf0"]
+ * assets/hello.txt -> ["Hello World"]
+ * assets/bin/array.bin -> ["\x00\xff\x0f\xf0"]
+ * compiled with $ assetc assets
  */
 
 int main() {
@@ -107,7 +111,7 @@ int main() {
 ```
 
 ## Open asset as FILE
-To get a C FILE handler for an compiled asset, use stdio.h's fmemopen:
+To get a C FILE handle for an compiled asset, use stdio.h's fmemopen:
 ```c
 #include <stdio.h>
 #include "asset.h"
