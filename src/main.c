@@ -11,8 +11,11 @@
 
 void print_help(const char *name) {
     fprintf(stderr, "Usage: %s [-h] [-o name] dir\n"
-                    "  -o sets the out name for the asset source and header file (default is asset.c|.h)\n"
-                    "  -h will clone asset.h into the current dir (will get the name from -o)",
+                    "       -o: sets the out name for the\n"
+                    "           asset source and header file\n"
+                    "           (default is asset.c|.h)\n"
+                    "       -h: will clone asset.h into the\n"
+                    "           current dir (with the name from -o)\n",
                     name);
     exit(EXIT_FAILURE);
 }
