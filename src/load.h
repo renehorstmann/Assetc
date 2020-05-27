@@ -3,6 +3,6 @@
 
 #include "file.h"
 
-void load_files(File **out_files, size_t *out_files_size, const char *dir);
+void load_dir(File **out_files, size_t *out_files_size, const char *dir);
 
 #endif //ASSETC_LOAD_H
