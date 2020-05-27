@@ -11,6 +11,6 @@ typedef struct File {
 
 void File_kill(File *self);
 
-File File_load(const char *file_name);
+File File_load(const char *dir, const char *file_name);
 
 #endif //ASSETC_FILE_H
