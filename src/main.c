@@ -9,7 +9,7 @@
 #include "apply.h"
 #include "asset.h"
 
-void print_help(const char *name) {
+static void print_help(const char *name) {
     fprintf(stderr, "Usage: %s dir [-h] [-o name]\n"
                     "       -o: sets the out name for the\n"
                     "           asset source and header file\n"
@@ -20,10 +20,14 @@ void print_help(const char *name) {
     exit(EXIT_FAILURE);
 }
 
-int main(int argc, char **argv) {
-    bool clone_header = false;
-    const char *out_name = "asset";
-    const char *dir = NULL;
+typedef struct args_s {
+    bool clone_header;
+    const char *out_name;
+    const char *dir;
+} args_s;
+
+static args_s parse_args(int argc, char **argv) {
+    args_s res = {false, "asset", NULL};
 
     for(int i=1; i<argc; i++) {
         if(argv[i][0] != '-') {
@@ -46,25 +50,31 @@ int main(int argc, char **argv) {
     if(!dir)
         print_help(argv[0]);
 
+    return res;
+}
+
+int main(int argc, char **argv) {
+    args_s args = parse_args(argc, argv);
+
     File *files;
     size_t files_size = 0;
     {
-        char *dir_cpy = New(char, strlen(dir) + 2);
-        strcpy(dir_cpy, dir);
+        char *dir = New(char, strlen(args.dir) + 2);
+        strcpy(dir, args.dir);
         if(dir[strlen(dir)] != '/')
-            strcat(dir_cpy, "/");
+            strcat(dir, "/");
  
-        load_dir(&files, &files_size, dir_cpy);
+        load_dir(&files, &files_size, dir);
         free(dir_cpy);
     }
 
-    if(clone_header) {
+    if(args.clone_header) {
         asset template = asset_get("template_header.txt");
         assert(template.data);
-        char *header = apply_header(template.data, out_name);
+        char *header = apply_header(template.data, args.out_name);
 
-        char *name = New(char, strlen(out_name) + 3); // + .h\0
-        strcpy(name, out_name);
+        char *name = New(char, strlen(args.out_name) + 3); // + .h\0
+        strcpy(name, args.out_name);
         strcat(name, ".h");
 
         FILE *file = fopen(name, "w");
@@ -78,10 +88,10 @@ int main(int argc, char **argv) {
     {
         asset template = asset_get("template_source.txt");
         assert(template.data);
-        char *source = apply_source(template.data, out_name, files, files_size);
+        char *source = apply_source(template.data, args.out_name, files, files_size);
 
-        char *name = New(char, strlen(out_name) + 3); // + .c\0
-        strcpy(name, out_name);
+        char *name = New(char, strlen(args.out_name) + 3); // + .c\0
+        strcpy(name, args.out_name);
         strcat(name, ".c");
 
         FILE *file = fopen(name, "w");
