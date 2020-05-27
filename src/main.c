@@ -10,7 +10,7 @@
 #include "asset.h"
 
 void print_help(const char *name) {
-    fprintf(stderr, "Usage: %s [-h] [-o name] dir\n"
+    fprintf(stderr, "Usage: %s dir [-h] [-o name]\n"
                     "       -o: sets the out name for the\n"
                     "           asset source and header file\n"
                     "           (default is asset.c|.h)\n"
