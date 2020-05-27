@@ -26,35 +26,35 @@ typedef struct args_s {
     const char *dir;
 } args_s;
 
-static args_s parse_args(int argc, char **argv) {
+static args_s args_parse(int argc, char **argv) {
     args_s res = {false, "asset", NULL};
 
     for(int i=1; i<argc; i++) {
         if(argv[i][0] != '-') {
-            if(dir)
+            if(res.dir)
                 print_help(argv[0]);
-            dir = argv[i];
+            res.dir = argv[i];
 
         } else {
             if(strcmp(argv[i], "-o") == 0) {
                 if(i == argc-1 || argv[i+1][0] == '-')
                     print_help(argv[0]);
-                out_name = argv[++i];
+                res.out_name = argv[++i];
             } else if(strcmp(argv[i], "-h") == 0) {
-                clone_header = true;
+                res.clone_header = true;
             } else
                 print_help(argv[0]);
         }
     }
 
-    if(!dir)
+    if(!res.dir)
         print_help(argv[0]);
 
     return res;
 }
 
 int main(int argc, char **argv) {
-    args_s args = parse_args(argc, argv);
+    args_s args = args_parse(argc, argv);
 
     File *files;
     size_t files_size = 0;
