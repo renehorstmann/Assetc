@@ -20,14 +20,14 @@ static void print_help(const char *name) {
     exit(EXIT_FAILURE);
 }
 
-typedef struct args_s {
+struct args {
     bool clone_header;
     const char *out_name;
     const char *dir;
-} args_s;
+};
 
-static args_s args_parse(int argc, char **argv) {
-    args_s res = {false, "asset", NULL};
+static struct args args_parse(int argc, char **argv) {
+    struct args res = {false, "asset", NULL};
 
     for(int i=1; i<argc; i++) {
         if(argv[i][0] != '-') {
@@ -54,7 +54,7 @@ static args_s args_parse(int argc, char **argv) {
 }
 
 int main(int argc, char **argv) {
-    args_s args = args_parse(argc, argv);
+    struct args args = args_parse(argc, argv);
 
     File *files;
     size_t files_size = 0;
@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
             strcat(dir, "/");
  
         load_dir(&files, &files_size, dir);
-        free(dir_cpy);
+        free(dir);
     }
 
     if(args.clone_header) {
