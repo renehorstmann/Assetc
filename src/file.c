@@ -26,13 +26,19 @@ static void open_file_as_string(char **out_string, size_t *out_size, const char 
     *out_size = length;
 }
 
-File File_load(const char *file_name) {
+File File_load(const char *dir, const char *file) {
+    char *file_path = New(char, strlen(dir) + strlen(file) + 1);
+    strcpy(file_path, dir);
+    strcat(file_path, file);
+
     char *string;
     size_t size;
-    open_file_as_string(&string, &size, file_name);
+    open_file_as_string(&string, &size, file_path);
+    free(file_path);
+
     if(size == 0)
         return (File) {0};
-    char *name_copy = New(char, strlen(file_name)+1);
-    strcpy(name_copy, file_name);
-    return (File) {name_copy, string, size};
+    char *name = New(char, strlen(file)+1);
+    strcpy(name, file);
+    return (File) {name, string, size};
 }
