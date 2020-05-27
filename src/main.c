@@ -23,11 +23,15 @@ void print_help(const char *name) {
 int main(int argc, char **argv) {
     bool clone_header = false;
     const char *out_name = "asset";
-    const char *file_names[argc];
-    size_t file_names_size = 0;
+    const char *dir = NULL;
 
     for(int i=1; i<argc; i++) {
-        if(argv[i][0] == '-') {
+        if(argv[i][0] != '-') {
+            if(dir)
+                print_help(argv[0]);
+            dir = argv[i];
+
+        } else {
             if(strcmp(argv[i], "-o") == 0) {
                 if(i == argc-1 || argv[i+1][0] == '-')
                     print_help(argv[0]);
@@ -36,17 +40,23 @@ int main(int argc, char **argv) {
                 clone_header = true;
             } else
                 print_help(argv[0]);
-        } else {
-            file_names[file_names_size++] = argv[i];
         }
     }
 
-    if(file_names_size == 0)
+    if(!dir)
         print_help(argv[0]);
 
     File *files;
     size_t files_size = 0;
-    load_files(&files, &files_size, file_names, file_names_size);
+    {
+        char *dir_cpy = New(char, strlen(dir) + 2);
+        strcpy(dir_cpy, dir);
+        if(dir[strlen(dir)] != '/')
+            strcat(dir_cpy, "/");
+ 
+        load_dir(&files, &files_size, dir_cpy);
+        free(dir_cpy);
+    }
 
     if(clone_header) {
         asset template = asset_get("template_header.txt");
