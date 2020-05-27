@@ -12,7 +12,7 @@ void error(FileArray *files, const char *file_name) {
     exit(EXIT_FAILURE);
 }
 
-void load_files(File **out_files, size_t *out_files_size, const char **file_names, size_t file_names_size) {
+void load_dir(File **out_files, size_t *out_files_size, const char *dir) {
     FileArray files = DynArray_INIT;
 
     for(int i=0; i<file_names_size; i++) {
