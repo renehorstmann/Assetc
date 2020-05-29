@@ -1,17 +1,30 @@
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
 #include "utilc/dynarray.h"
 #include "load.h"
 
 DynArray(File, FileArray)
 
-void error(FileArray *files, const char *file_name) {
+static void error(FileArray *files, const char *file_name) {
     for(int i=0; i<files->size; i++)
         File_kill(&files->array[i]);
     FileArray_kill(files);
     fprintf(stderr, "file: <%s> could not be loaded\n", file_name);
     exit(EXIT_FAILURE);
+}
+
+static int is_regular_file(const char *path) {
+    struct stat path_stat;
+    stat(path, &path_stat);
+    return S_ISREG(path_stat.st_mode);
+}
+
+static int is_dir(const char *path) {
+    struct stat path_stat;
+    stat(path, &path_stat);
+    return S_ISDIR(path_stat.st_mode);
 }
 
 void load_dir(File **out_files, size_t *out_files_size, const char *dir_path) {
@@ -22,7 +35,7 @@ void load_dir(File **out_files, size_t *out_files_size, const char *dir_path) {
     if(!dir)
         return;
     
-    while( entry = readdir(dir)) {
+    while( (entry = readdir(dir)) ) {
         puts(entry->d_name);
     }
     // todo
