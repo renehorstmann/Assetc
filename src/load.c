@@ -5,6 +5,8 @@
 #include "utilc/dynarray.h"
 #include "load.h"
 
+#define PATH_MAX 4096
+
 DynArray(File, FileArray)
 
 static void error(FileArray *files, const char *file_name) {
@@ -30,13 +32,22 @@ static int is_dir(const char *path) {
 void load_dir(File **out_files, size_t *out_files_size, const char *dir_path) {
     FileArray files = DynArray_INIT;
 
+    char path[PATH_MAX];
+    strcpy(path, dir_path);
+    char *path_append = path + strlen(dir_path);
+    if(path_append[-1] != '/')
+        *path_append++ = '/';
+ 
+        
+
     DIR *dir = opendir(dir_path);
     struct dirent *entry;
     if(!dir)
         return;
     
     while( (entry = readdir(dir)) ) {
-        puts(entry->d_name);
+        strcpy(path_append, entry->d_name);
+        puts(path);
     }
     // todo
 
