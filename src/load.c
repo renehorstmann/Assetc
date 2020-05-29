@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include <sys/dir.h>
+#include <sys/types.h>
+#include <dirent.h>
 #include "utilc/dynarray.h"
 #include "load.h"
 
@@ -17,9 +18,13 @@ void load_dir(File **out_files, size_t *out_files_size, const char *dir_path) {
     FileArray files = DynArray_INIT;
 
     DIR *dir = opendir(dir_path);
+    struct dirent *entry;
     if(!dir)
         return;
-
+    
+    while( entry = readdir(dir)) {
+        puts(entry->d_name);
+    }
     // todo
 
     closedir(dir);
