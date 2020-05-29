@@ -50,6 +50,8 @@ static struct args args_parse(int argc, char **argv) {
     if(!res.dir)
         print_help(argv[0]);
 
+    // check strlen(res.out_name) < 40
+
     return res;
 }
 
@@ -58,12 +60,13 @@ int main(int argc, char **argv) {
 
     File *files;
     size_t files_size = 0;
+
     {
-        char *dir = New(char, strlen(args.dir) + 2);
+        char *dir = New(char, strlen(args.dir) + 2);  // + [/] + \0
         strcpy(dir, args.dir);
-        if(dir[strlen(dir)] != '/')
+        if (dir[strlen(dir) - 1] != '/')
             strcat(dir, "/");
- 
+
         load_dir(&files, &files_size, dir);
         free(dir);
     }
