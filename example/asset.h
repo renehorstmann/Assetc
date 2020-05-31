@@ -1,5 +1,6 @@
-#ifndef ASSETC_H
-#define ASSETC_H
+#ifndef ASSETC_ASSET_H
+#define ASSETC_ASSET_H
+
 
 #include <stdlib.h> // for size_t
 
@@ -25,4 +26,4 @@ asset asset_get(const char *file);
  */
 asset asset_tryget(const char *file);
 
-#endif //ASSETC_H
+#endif //end of include quard
