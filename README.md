@@ -93,6 +93,8 @@ int main() {
     asset not_available = asset_tryget("error");
     assert(!not_available.data);
 
+    // asset_get("error");  // would raise SIGABRT
+
     // no need to free up asset
 
     // will print:

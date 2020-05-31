@@ -5,8 +5,9 @@
 
 /*
  * The compiled files are:
- * hello.txt -> ["Hello World"]
- * bin/array.bin -> ["\x00\xff\x0f\xf0"]
+ * assets/hello.txt -> ["Hello World"]
+ * assets/bin/array.bin -> ["\x00\xff\x0f\xf0"]
+ * compiled with $ assetc assets
  */
 
 int main() {
@@ -14,11 +15,7 @@ int main() {
     // returns the memory location and size of a compiled asset file.
     asset hello = asset_get("hello.txt");
 
-    // if .data or .size == 0, the file was not found
-    if(!hello.data) {
-        fprintf(stderr, "asset hello.txt not found");
-        return 1;
-    }
+    // if asset_get fails, it will raise SIGABRT
 
     // all files end up with a 0 in memory, so that they are valid C strings
     assert(hello.data[hello.size] == 0);
@@ -26,7 +23,10 @@ int main() {
     printf("hello data: %p\n", (const void *) hello.data);
     printf("hello content: <%s>\n\n", hello.data);
 
-    asset array = asset_get("bin/array.bin");
+    asset array = asset_tryget("bin/array.bin");
+
+    // if asset_tryget fails, .data and .size will be 0
+
     if(!array.data) {
         fprintf(stderr, "asset array.bin not found");
         return 1;
@@ -40,8 +40,10 @@ int main() {
     puts(">");
 
 
-    asset not_available = asset_get("error");
+    asset not_available = asset_tryget("error");
     assert(!not_available.data);
+
+    // asset_get("error");  // would raise SIGABRT
 
     // no need to free up asset
 

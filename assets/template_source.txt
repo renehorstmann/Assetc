@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include <stdbool.h>
+#include <signal.h>
 
 @include_asset_h
 
@@ -54,8 +55,14 @@ static void map_init() {
 @map_init
 }
 
-
 asset asset_get(const char *file) {
+    asset res = asset_tryget(file);
+    if(!res.data)
+        raise(SIGABRT);
+    return res;
+}
+
+asset asset_tryget(const char *file) {
     static bool loaded = false;
     if (!loaded) {
         loaded = true;
