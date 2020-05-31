@@ -10,11 +10,14 @@ To compile an asset directory, see the examples below:
 $ assetc assets_dir
 # compiles recursivly the content of assets_dir into asset.c
 
-$ assetc assetc_dir -o asset_file_name
-# -o changes the key of the compiled file
-
 $ assetc -h
 # will copy asset.h into the current dir (asset.h is always the same)
+
+$ assetc assetc_dir -o asset_file_name
+# -o changes the name of the compiled file
+
+$ asstec assetc_dir -n namespace
+# -n adds a namespace to globals (namespace_asset*)
 ```
 
 
