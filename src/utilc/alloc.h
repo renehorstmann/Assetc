@@ -2,26 +2,36 @@
 #define UTILC_ALLOC_H
 
 #include <stdlib.h>
-#include <assert.h>
+#include <stdio.h>
+#include <signal.h>
 
-/** calls malloc and asserts the given pointer to be not NULL */
-static void *assert_malloc(size_t n, size_t size) {
+/** calls malloc and raises sig if it fails */
+static void *raising_malloc(size_t n, size_t size, int sig) {
     void *mem = malloc(n * size);
-    assert(mem && "malloc failed, got a null ptr");
+    if(!mem) {
+        fprintf(stderr, "malloc failed with n: %zu size: %zu\n", n, size);
+        raise(sig);
+    }
     return mem;
 }
 
-/** calls calloc and asserts the given pointer to be not NULL */
-static void *assert_calloc(size_t n, size_t size) {
+/** calls calloc and raises sig if it fails */
+static void *raising_calloc(size_t n, size_t size, int sig) {
     void *mem = calloc(n, size);
-    assert(mem && "calloc failed, got a null ptr");
+    if(!mem) {
+        fprintf(stderr, "calloc failed with n: %zu size: %zu\n", n, size);
+        raise(sig);
+    }
     return mem;
 }
 
-/** calls realloc and asserts the given pointer to be not NULL */
-static void *assert_realloc(void *mem, size_t n, size_t size) {
+/** calls realloc and raises sig if it fails */
+static void *raising_realloc(void *mem, size_t n, size_t size, int sig) {
     void *mem_new = realloc(mem, n * size);
-    assert(mem_new && "realloc failed, got a null ptr");
+    if(!mem) {
+        fprintf(stderr, "realloc failed with n: %zu size: %zu\n", n, size);
+        raise(sig);
+    }
     return mem_new;
 }
 
@@ -31,14 +41,14 @@ static void free0(void **mem) {
     *mem = NULL;
 }
 
-/** calls assert_malloc and casts to the given type */
-#define New(type, n) (type *) assert_malloc((n), sizeof(type))
+/** calls raising_malloc and casts to the given type */
+#define New(type, n) (type *) raising_malloc((n), sizeof(type), SIGABRT)
 
-/** calls assert_calloc and casts to the given type */
-#define New0(type, n) (type *) assert_calloc((n), sizeof(type))
+/** calls raising_calloc and casts to the given type */
+#define New0(type, n) (type *) raising_calloc((n), sizeof(type), SIGABRT)
 
-/** calls assert_realloc and casts to the given type */
-#define ReNew(type, mem, n) (type *) assert_realloc((mem), (n), sizeof(type))
+/** calls raising_realloc and casts to the given type */
+#define ReNew(type, mem, n) (type *) raising_realloc((mem), (n), sizeof(type), SIGABRT)
 
 
 /** calls malloc and casts to the given type */
