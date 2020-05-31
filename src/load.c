@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "utilc/assume.h"
 #include "utilc/alloc.h"
 #include "utilc/dynarray.h"
 #include "load.h"
@@ -33,10 +34,7 @@ static void load_dir_r(File **out_files, size_t *out_files_size, const char *roo
     
     DIR *dir = opendir(current_dir);
     struct dirent *entry;
-    if(!dir) {
-        fprintf(stderr, "failed to load dir: %s\n", current_dir);
-        exit(EXIT_FAILURE);
-    }
+    assume(dir, "failed to load dir: %s", current_dir);
     
     while( (entry = readdir(dir)) ) {
         if(entry->d_name[0] == '.')
@@ -70,10 +68,7 @@ static void load_dir_r(File **out_files, size_t *out_files_size, const char *roo
             strcat(name , entry->d_name);
             File file = File_load(root_dir, name);
             FileArray_push(&files, file);
-            if(!file.data) {
-                fprintf(stderr, "failed to load file: %s\n", name);
-                exit(EXIT_FAILURE);
-            }
+            assume(file.data, "failed to load file: %s", name);
 
             free(name);
         }
