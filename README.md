@@ -9,7 +9,6 @@ $ mkdir build
 $ cd build
 $ cmake ..
 $ make
-$ ctest         # runs the tests
 # make install  # as root or with sudo make install
 ```
 
