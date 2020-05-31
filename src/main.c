@@ -105,6 +105,8 @@ int main(int argc, char **argv) {
     File *files = NULL;
     size_t files_size = 0;
 
+
+    // load
     {
         char *dir = New(char, strlen(args.dir) + 2);  // + [/] + \0
         strcpy(dir, args.dir);
@@ -117,6 +119,7 @@ int main(int argc, char **argv) {
         free(dir);
     }
 
+    // header
     if(args.clone_header) {
         char *header = apply_header(get_template_header(), args.file_name, args.namespace);
 
@@ -132,6 +135,7 @@ int main(int argc, char **argv) {
         free(header);
     }
 
+    // source
     {
         char *source = apply_source(get_template_source(), args.file_name, args.namespace, files, files_size);
 

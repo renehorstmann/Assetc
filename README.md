@@ -1,10 +1,6 @@
 # Assetc
 Compile an asset directory into a C source file.
 
-
-## In active development!
-Everything except subdirs seem to work
-
 ## Compilation of assets
 To compile an asset directory, see the examples below:
 ```bash
