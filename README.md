@@ -65,7 +65,7 @@ int main() {
     // returns the memory location and size of a compiled asset file.
     asset hello = asset_get("hello.txt");
 
-    // if asset_get fails, it will raise a signal
+    // if asset_get fails, it will raise SIGABRT
 
     // all files end up with a 0 in memory, so that they are valid C strings
     assert(hello.data[hello.size] == 0);
