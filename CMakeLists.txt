@@ -21,3 +21,11 @@ add_executable(example
         example/main.c
         example/asset.c
         )
+
+
+#
+# install:
+#
+install(TARGETS assetc
+        RUNTIME DESTINATION bin
+        )
