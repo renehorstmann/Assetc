@@ -15,9 +15,15 @@ typedef struct asset {
 
 /**
  * Returns the memory location and size of the compiled file.
- * If the file was not found, the asset will be (asset) {NULL, 0}.
+ * If the file was not found, SIGABRT will be raised
  */
 asset asset_get(const char *file);
 
-#endif //end of include quard
 
+/**
+ * Returns the memory location and size of the compiled file.
+ * If the file was not found, .data and .size will be 0.
+ */
+asset asset_tryget(const char *file);
+
+#endif //end of include quard

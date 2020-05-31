@@ -5,10 +5,10 @@
 #include <stdbool.h>
 #include <signal.h>
 
-@include_asset_h
+@include_asset_h@
 
 
-@file_init
+@file_init@
 
 static unsigned hash(const char *key) {
     unsigned hash = 5381;
@@ -21,7 +21,7 @@ static unsigned hash(const char *key) {
 // linked list of asset
 typedef struct llist {
     const char *key;
-    asset value;
+    @asset@ value;
     struct llist *next;
 } llist;
 
@@ -50,26 +50,26 @@ static void map_init() {
     // set all map entries to NULL
     memset(map, 0, sizeof(map));
 
-@list_init
+@list_init@
 
-@map_init
+@map_init@
 }
 
-asset asset_get(const char *file) {
-    asset res = asset_tryget(file);
+@asset@ @asset@_get(const char *file) {
+    @asset@ res = @asset@_tryget(file);
     if(!res.data)
         raise(SIGABRT);
     return res;
 }
 
-asset asset_tryget(const char *file) {
+@asset@ @asset@_tryget(const char *file) {
     static bool loaded = false;
     if (!loaded) {
         loaded = true;
         map_init();
     }
 
-    asset res = {NULL, 0};
+    @asset@ res = {NULL, 0};
     llist *item = map_get(file);
     if (item)
         res = item->value;
