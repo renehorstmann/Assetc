@@ -1,6 +1,19 @@
 # Assetc
 Compile an asset directory into a C source file.
 
+## Getting started
+Copy the library to your system, compile and install it (tested on GCC 7.4.0).
+If cloned:
+```bash
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+$ ctest         # runs the tests
+# make install  # as root or with sudo make install
+```
+
+
 ## Compilation of assets
 To compile an asset directory, see the examples below:
 ```bash
