@@ -145,7 +145,7 @@ static char *sp_cat_n_v(size_t added_length, const char **strings) {
     return res;
 }
 
-/** Concatenates all given strings together, if srtlen(*strings) < length, length+1 bytes will be allocated */
+/** Concatenates all given strings together. added_length more bytes will be allocated */
 #define sp_cat_n(added_length, ...) sp_cat_n_v((added_length), (const char*[]) {__VA_ARGS__, NULL})
 
 /** Iterates and copies src, end can be larger than the string, also all parameters can be negativ */
