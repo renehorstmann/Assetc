@@ -110,11 +110,9 @@ static char *sp_clone(const char *src) {
     return res;
 }
 
-/** Clones a string, if length > strlen(src), length+1 bytes will be allocated */
-static char *sp_clone_n(const char *src, size_t length) {
-    if(strlen(src) > length)
-        length = strlen(src);
-    char *res = sp_malloc(length + 1);
+/** Clones a string and allocates added_length more bytes */
+static char *sp_clone_n(const char *src, size_t added_length) {
+    char *res = sp_malloc(strlen(src) + added_length + 1);
     strcpy(res, src);
     return res;
 }
@@ -135,16 +133,14 @@ static char *sp_cat_v(const char **strings) {
 
 /**
  * Concatenates all given strings together (strings must end with a NULL).
- * If srtlen(*strings) < length, length+1 bytes will be allocated
+ * added_length more bytes will be allocated
  */
-static char *sp_cat_n_v(const char **strings, size_t length) {
+static char *sp_cat_n_v(const char **strings, size_t added_length) {
     size_t size = 0;
     const char **it = strings;
     while(*it)
         size += strlen(*it++);
-    if(size > length)
-        length = size;
-    char *res = sp_malloc(length + 1);
+    char *res = sp_malloc(size + added_length + 1);
     strcat_into_v(res, strings);
     return res;
 }
