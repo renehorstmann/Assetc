@@ -111,7 +111,7 @@ static char *sp_clone(const char *src) {
 }
 
 /** Clones a string and allocates added_length more bytes */
-static char *sp_clone_n(const char *src, size_t added_length) {
+static char *sp_clone_n(size_t added_length, const char *src) {
     char *res = sp_malloc(strlen(src) + added_length + 1);
     strcpy(res, src);
     return res;
@@ -135,7 +135,7 @@ static char *sp_cat_v(const char **strings) {
  * Concatenates all given strings together (strings must end with a NULL).
  * added_length more bytes will be allocated
  */
-static char *sp_cat_n_v(const char **strings, size_t added_length) {
+static char *sp_cat_n_v(size_t added_length, const char **strings) {
     size_t size = 0;
     const char **it = strings;
     while(*it)
@@ -146,7 +146,7 @@ static char *sp_cat_n_v(const char **strings, size_t added_length) {
 }
 
 /** Concatenates all given strings together, if srtlen(*strings) < length, length+1 bytes will be allocated */
-#define sp_cat_n(...) sp_cat_n_v((const char*[]) {__VA_ARGS__, NULL})
+#define sp_cat_n(added_length, ...) sp_cat_n_v((added_length), (const char*[]) {__VA_ARGS__, NULL})
 
 /** Iterates and copies src, end can be larger than the string, also all parameters can be negativ */
 static char *sp_iter(const char *src, int begin, int end, int step) {
