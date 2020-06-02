@@ -34,6 +34,23 @@ static char *strcat_into_v(char *dst, const char **strings) {
 #define strcat_into(dst, ...) strcat_into_v((dst), (const char*[]) {__VA_ARGS__, NULL})
 
 /**
+ * Concatenates multiple strings into a new allocated string on the heap
+ * @param strings: A list of strings, that ends with NULL
+ * @return: The new allocated string on heap
+ */
+static char *strcat_into_heap_v(const char **strings) {
+    const char **it = strings;
+    size_t size = 1;
+    while(*it)
+        size += strlen(*it++);
+    char *res = (char *) malloc(size);
+    strcat_into_v(res, strings);
+    return res;
+}
+/** Concatenates all strings into a new allocated string on heap */
+#define strcat_into_heap(...) strcat_into_heap_v((const char*[]) {__VA_ARGS__, NULL})
+
+/**
  * Pool member that stores all created strings in a dynamic list.
  * if used, set malloc and free.
  */
