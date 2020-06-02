@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "utilc/alloc.h"
+#include "utilc/strpool.h"
 #include "file.h"
 
 void File_kill(File *self) {
@@ -27,9 +28,7 @@ static void open_file_as_string(char **out_string, size_t *out_size, const char 
 }
 
 File File_load(const char *dir, const char *file) {
-    char *file_path = New(char, strlen(dir) + strlen(file) + 1);
-    strcpy(file_path, dir);
-    strcat(file_path, file);
+    char *file_path = strcat_into_heap(dir, file);
 
     char *string;
     size_t size;
