@@ -12,7 +12,7 @@
 
 #define PATH_MAX 4096
 
-DynArray(File, FileArray)
+DynArray(File, FileArray, file_array)
 
 static bool is_regular_file(const char *path) {
     struct stat path_stat;
@@ -48,14 +48,14 @@ static void load_dir_r(File **out_files, size_t *out_files_size, const char *roo
             size_t sub_files_size = 0;
             char *new_sub_dir = sp_cat(sub_dir, entry->d_name, "/");
             load_dir_r(&sub_files, &sub_files_size, root_dir, new_sub_dir);
-            FileArray_push_array(&files, sub_files, sub_files_size);
+            file_array_push_array(&files, sub_files, sub_files_size);
             printf("finished sub dir: %s\n", entry->d_name);
 
         } else if(is_regular_file(path)) {
             printf("loading file: %s\n", entry->d_name);
             char *name = sp_cat(sub_dir, entry->d_name);
             File file = File_load(root_dir, name);
-            FileArray_push(&files, file);
+            file_array_push(&files, file);
             assume(file.data, "failed to load file: %s", name);
         }
     }

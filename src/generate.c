@@ -4,10 +4,10 @@
 #include "utilc/dynarray.h"
 #include "generate.h"
 
-DynArray(char, StrArray)
+DynArray(char, StrArray, str_array)
 
 static void push_string(StrArray *array, const char *str) {
-    StrArray_push_array(array, str, strlen(str));
+    str_array_push_array(array, str, strlen(str));
 }
 
 char *generate_file_init_on_heap(int id, const char *name, const char *data, size_t size) {
@@ -34,7 +34,7 @@ char *generate_file_init_on_heap(int id, const char *name, const char *data, siz
 
     push_string(&str, "\";\n");
 
-    StrArray_push(&str, '\0');
+    str_array_push(&str, '\0');
     return str.array;
 }
 
@@ -52,7 +52,7 @@ char *generate_list_init_on_heap(int id) {
     push_string(&str, id_str);
     push_string(&str, ");\n");
 
-    StrArray_push(&str, '\0');
+    str_array_push(&str, '\0');
     return str.array;
 }
 
@@ -68,6 +68,6 @@ char *generate_map_init_on_heap(int id) {
     push_string(&str, id_str);
     push_string(&str, ");\n");
 
-    StrArray_push(&str, '\0');
+    str_array_push(&str, '\0');
     return str.array;
 }

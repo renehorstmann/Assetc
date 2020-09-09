@@ -7,6 +7,7 @@
 #include <signal.h>
 #include <assert.h>
 #include <math.h>
+#include <ctype.h>
 
 
 #define SP_THREAD_LOCAL __thread
@@ -219,6 +220,28 @@ static char *sp_replace(const char *src, const char *from, const char *to) {
             *it_res++ = *it_src++;
     }
     *it_res = '\0';
+    return res;
+}
+
+/** Sets all characters in the string to lower chars */
+static char *sp_tolower(const char *src) {
+    char *res = sp_clone(src);
+    char *it = res;
+    while (*it) {
+        *it = (char) tolower(*it);
+        it++;
+    }
+    return res;
+}
+
+/** Sets all characters in the string to upper chars */
+static char *sp_toupper(const char *src) {
+    char *res = sp_clone(src);
+    char *it = res;
+    while (*it) {
+        *it = (char) toupper(*it);
+        it++;
+    }
     return res;
 }
 
