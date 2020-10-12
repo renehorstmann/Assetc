@@ -98,7 +98,7 @@ static strviu sv_eat_int ## x ## _binary_le(strviu viu, int ## x ## _t *eaten) {
         return viu;\
     if(sv_length(viu) < (x)/8)\
         return (strviu) {NULL, "sv_eat_int" #x "_binary_le failed"};\
-    if(*eaten){\
+    if(eaten){\
         memcpy(eaten, viu.begin, (x)/8);\
         if(!sv__helper_system_is_binary_little_endian_())\
             sv__helper_swap_endian_(eaten, (x)/8);\
@@ -123,7 +123,7 @@ static strviu sv_eat_int ## x ## _binary_be(strviu viu, int ## x ## _t *eaten) {
         return viu;\
     if(sv_length(viu) < (x)/8)\
         return (strviu) {NULL, "sv_eat_int" #x "_binary_be failed"};\
-    if(*eaten){\
+    if(eaten){\
         memcpy(eaten, viu.begin, (x)/8);\
         if(sv__helper_system_is_binary_little_endian_())\
             sv__helper_swap_endian_(eaten, (x)/8);\
@@ -148,7 +148,7 @@ static strviu sv_eat_uint ## x ## _binary_le(strviu viu, uint ## x ## _t *eaten)
         return viu;\
     if(sv_length(viu) < (x)/8)\
         return (strviu) {NULL, "sv_eat_uint" #x "_binary_le failed"};\
-    if(*eaten){\
+    if(eaten){\
         memcpy(eaten, viu.begin, (x)/8);\
         if(!sv__helper_system_is_binary_little_endian_())\
             sv__helper_swap_endian_(eaten, (x)/8);\
@@ -173,7 +173,7 @@ static strviu sv_eat_uint ## x ## _binary_be(strviu viu, uint ## x ## _t *eaten)
         return viu;\
     if(sv_length(viu) < (x)/8)\
         return (strviu) {NULL, "sv_eat_uint" #x "_binary_be failed"};\
-    if(*eaten){\
+    if(eaten){\
         memcpy(eaten, viu.begin, (x)/8);\
         if(sv__helper_system_is_binary_little_endian_())\
             sv__helper_swap_endian_(eaten, (x)/8);\
@@ -198,7 +198,7 @@ static strviu sv_eat_float_binary_le(strviu viu, float *eaten) {
         return viu;
     if(sv_length(viu) < 4)
         return (strviu) {NULL, "sv_eat_float_binary_le failed"};
-    if(*eaten) {
+    if(eaten) {
         memcpy(eaten, viu.begin, 4);
         if (!sv__helper_system_is_binary_little_endian_())
             sv__helper_swap_endian_(eaten, 4);
@@ -217,7 +217,7 @@ static strviu sv_eat_float_binary_be(strviu viu, float *eaten) {
         return viu;
     if(sv_length(viu) < 4)
         return (strviu) {NULL, "sv_eat_float_binary_be failed"};
-    if(*eaten) {
+    if(eaten) {
         memcpy(eaten, viu.begin, 4);
         if (sv__helper_system_is_binary_little_endian_())
             sv__helper_swap_endian_(eaten, 4);
@@ -236,7 +236,7 @@ static strviu sv_eat_double_binary_le(strviu viu, double *eaten) {
         return viu;
     if(sv_length(viu) < 8)
         return (strviu) {NULL, "sv_eat_double_binary_le failed"};
-    if(*eaten) {
+    if(eaten) {
         memcpy(eaten, viu.begin, 8);
         if (!sv__helper_system_is_binary_little_endian_())
             sv__helper_swap_endian_(eaten, 8);
@@ -255,7 +255,7 @@ static strviu sv_eat_double_binary_be(strviu viu, double *eaten) {
         return viu;
     if(sv_length(viu) < 8)
         return (strviu) {NULL, "sv_eat_double_binary_be failed"};
-    if(*eaten) {
+    if(eaten) {
         memcpy(eaten, viu.begin, 8);
         if (sv__helper_system_is_binary_little_endian_())
             sv__helper_swap_endian_(eaten, 8);
