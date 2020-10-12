@@ -5,7 +5,13 @@
 #include <stdarg.h>
 #include <signal.h>
 
+#ifndef ASSUME_SIGNAL
+#define ASSUME_SIGNAL SIGABRT
+#endif
+
+#ifndef ASSUME_MAX_FORMATED_MSG_SIZE
 #define ASSUME_MAX_FORMATED_MSG_SIZE 4096
+#endif
 
 /**
  * assert like function, that also uses formatting print to stderr.
@@ -26,7 +32,7 @@ static void assume_function_impl__(const char *expression, const char *file, int
 #else
     fprintf(stderr, "Assumption failed: %s at %s:%d %s\n", expression, file, line, msg);
 #endif
-    raise(SIGABRT);
+    raise(ASSUME_SIGNAL);
 }
 
 

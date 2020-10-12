@@ -1,6 +1,7 @@
 #ifndef UTILC_STRVIU_H
 #define UTILC_STRVIU_H
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -26,22 +27,22 @@ static void sv__helper_swap_endian_(void *buf, int n) {
 #define ToStrViu(string) ((strviu){(char*)(string), (char*)(string)+strlen((string))})
 
 /** Data type for a string view instead of null termination, it uses an pointer to end (e. g. pointing to the 0) */
-typedef struct strviu {
+typedef struct {
     char *begin;
     char *end;
 } strviu;
 
 #define STRVIUARRAY_SIZE 128
 /** Data type to store multiple StrViu's, limited to STRVIUARRAY_SIZE */
-typedef struct strviuarray {
+typedef struct {
     strviu array[128];
-    size_t size;
+    int size;
 } strviuarray;
 
 /** Data type to store multiple StrViu's */
-typedef struct StrViuArray {
+typedef struct {
     strviu *array;
-    size_t size;
+    int size;
 } StrViuArray;
 
 /** StrViuArray destructor frees the array and sets to 0 */
@@ -51,13 +52,20 @@ static void StrViuArray_kill(StrViuArray *self) {
     self->size = 0;
 }
 
+/** Prints a strviu to stdout and returns its length */
+static int sv_print(strviu viu) {
+    int size = (viu.end > viu.begin) ? (viu.end - viu.begin) : 0;
+    printf("(strviu) {%.*s}\n", size, viu.begin);
+    return size;
+}
+
 /** @returns: true if the StrViu is empty (length==0) */
 static bool sv_empty(strviu viu) {
     return viu.begin >= viu.end;
 }
 
 /** @returns: the length of the StrViu */
-static size_t sv_length(strviu viu) {
+static int sv_length(strviu viu) {
     return (viu.end > viu.begin) ? (viu.end - viu.begin) : 0;
 }
 
@@ -176,7 +184,7 @@ static int sv_find_last(strviu viu, char find) {
 /** @returns: The index of the first found StrViu find in viu, or -1 if nothing found */
 static int sv_find_first_sv(strviu viu, strviu find) {
     int n = 0;
-    size_t find_len = sv_length(find);
+    int find_len = sv_length(find);
     while (viu.begin <= viu.end - find_len) {
         if (strncmp(viu.begin++, find.begin, find_len) == 0)
             return n;
@@ -187,7 +195,7 @@ static int sv_find_first_sv(strviu viu, strviu find) {
 
 /** @returns: The index of the last found StrViu find in viu, or -1 if nothing found */
 static int sv_find_last_sv(strviu viu, strviu find) {
-    size_t find_len = sv_length(find);
+    int find_len = sv_length(find);
     viu.end -= find_len;
     int n = (int) sv_length(viu);
     while (viu.end >= viu.begin) {
@@ -235,6 +243,7 @@ static int sv_find_last_multiple(strviu viu, const char *multiple_chars) {
     return -1;
 }
 
+
 /** @returns: A new StrViu, based on viu, without every leading char until the char until */
 static strviu sv_eat_until(strviu viu, char until) {
     int pos = sv_find_first(viu, until);
@@ -242,6 +251,20 @@ static strviu sv_eat_until(strviu viu, char until) {
         viu.begin += pos;
     else
         viu.begin = viu.end;
+    return viu;
+}
+
+/**
+ * @returns: A new StrViu, based on viu, without every leading char until the char until. The cut is set into get
+ */
+static strviu sv_eat_get_until(strviu viu, char until, strviu *get) {
+    get->begin = viu.begin;
+    int pos = sv_find_first(viu, until);
+    if (pos >= 0)
+        viu.begin += pos;
+    else
+        viu.begin = viu.end;
+    get->end = viu.begin;
     return viu;
 }
 
@@ -255,6 +278,18 @@ static strviu sv_eat_back_until(strviu viu, char until) {
     return viu;
 }
 
+/** @returns: A new StrViu, based on viu, without every tailing char until the char until. The cut is set into get */
+static strviu sv_eat_get_back_until(strviu viu, char until, strviu *get) {
+    get->begin = viu.begin;
+    int pos = sv_find_last(viu, until);
+    if (pos >= 0)
+        viu.end = viu.begin + pos + 1;
+    else
+        viu.end = viu.begin;
+    get->end = viu.begin;
+    return viu;
+}
+
 /** @returns: A new StrViu, based on viu, without every leading char until the StrViu until */
 static strviu sv_eat_until_sv(strviu viu, strviu until) {
     int pos = sv_find_first_sv(viu, until);
@@ -262,6 +297,18 @@ static strviu sv_eat_until_sv(strviu viu, strviu until) {
         viu.begin += pos;
     else
         viu.begin = viu.end;
+    return viu;
+}
+
+/** @returns: A new StrViu, based on viu, without every leading char until the StrViu until. The cut is set into get */
+static strviu sv_eat_get_until_sv(strviu viu, strviu until, strviu *get) {
+    get->begin = viu.begin;
+    int pos = sv_find_first_sv(viu, until);
+    if (pos >= 0)
+        viu.begin += pos;
+    else
+        viu.begin = viu.end;
+    get->end = viu.begin;
     return viu;
 }
 
@@ -275,14 +322,36 @@ static strviu sv_eat_back_until_sv(strviu viu, strviu until) {
     return viu;
 }
 
+/** @returns: A new StrViu, based on viu, without every tailing char until the StrViu until. The cut is set into get */
+static strviu sv_eat_get_back_until_sv(strviu viu, strviu until, strviu *get) {
+    get->begin = viu.begin;
+    int pos = sv_find_last_sv(viu, until);
+    if (pos >= 0)
+        viu.end = viu.begin + pos + sv_length(until);
+    else
+        viu.end = viu.begin;
+    get->end = viu.begin;
+    return viu;
+}
+
 /** @returns: A new StrViu, based on viu, without every leading char until the cstring until */
 static strviu sv_eat_until_cstring(strviu viu, const char *until) {
     return sv_eat_until_sv(viu, ToStrViu(until));
 }
 
+/** @returns: A new StrViu, based on viu, without every leading char until the cstring until. The cut is set into get */
+static strviu sv_eat_get_until_cstring(strviu viu, const char *until, strviu *get) {
+    return sv_eat_get_until_sv(viu, ToStrViu(until), get);
+}
+
 /** @returns: A new StrViu, based on viu, without every tailing char until the cstring until */
 static strviu sv_eat_back_until_cstring(strviu viu, const char *until) {
     return sv_eat_back_until_sv(viu, ToStrViu(until));
+}
+
+/** @returns: A new StrViu, based on viu, without every tailing char until the cstring until. The cut is set into get */
+static strviu sv_eat_get_back_until_cstring(strviu viu, const char *until, strviu *get) {
+    return sv_eat_get_back_until_sv(viu, ToStrViu(until), get);
 }
 
 /** @returns: A new StrViu, based on viu, without every leading char until one of the chars in multiple_chars */
@@ -295,6 +364,18 @@ static strviu sv_eat_until_multiple(strviu viu, const char *multiple_chars) {
     return viu;
 }
 
+/** @returns: A new StrViu, based on viu, without every leading char until one of the chars in multiple_chars. The cut is set into get */
+static strviu sv_eat_get_until_multiple(strviu viu, const char *multiple_chars, strviu *get) {
+    get->begin = viu.begin;
+    int pos = sv_find_first_multiple(viu, multiple_chars);
+    if (pos >= 0)
+        viu.begin += pos;
+    else
+        viu.begin = viu.end;
+    get->end = viu.begin;
+    return viu;
+}
+
 /** @returns: A new StrViu, based on viu, without every tailing char until one of the chars in multiple_chars */
 static strviu sv_eat_back_until_multiple(strviu viu, const char *multiple_chars) {
     int pos = sv_find_last_multiple(viu, multiple_chars);
@@ -302,6 +383,18 @@ static strviu sv_eat_back_until_multiple(strviu viu, const char *multiple_chars)
         viu.end = viu.begin + pos + 1;
     else
         viu.end = viu.begin;
+    return viu;
+}
+
+/** @returns: A new StrViu, based on viu, without every tailing char until one of the chars in multiple_chars. The cut is set into get */
+static strviu sv_eat_get_back_until_multiple(strviu viu, const char *multiple_chars, strviu *get) {
+    get->begin = viu.begin;
+    int pos = sv_find_last_multiple(viu, multiple_chars);
+    if (pos >= 0)
+        viu.end = viu.begin + pos + 1;
+    else
+        viu.end = viu.begin;
+    get->end = viu.begin;
     return viu;
 }
 
@@ -325,7 +418,7 @@ static int sv_count(strviu viu, char search) {
 /** @returns: The number of the StrViu search, found in viu */
 static int sv_count_sv(strviu viu, strviu search) {
     int cnt = 0;
-    size_t search_len = sv_length(search);
+    int search_len = sv_length(search);
     while (viu.begin <= viu.end - search_len) {
         if (strncmp(viu.begin++, search.begin, search_len) == 0)
             cnt++;
@@ -356,11 +449,11 @@ static void sv_replace(strviu viu, char old, char replacement) {
 
 /** Copies the StrViu viu to dst, with each StrViu old replaced to replacement (until the end of one is reached) */
 static void sv_replace_into_sv(strviu dst, strviu viu, strviu old, strviu replacement) {
-    size_t old_len = sv_length(old);
-    size_t repl_len = sv_length(replacement);
+    int old_len = sv_length(old);
+    int repl_len = sv_length(replacement);
     while (dst.begin < dst.end && viu.begin < viu.end) {
         if (strncmp(viu.begin, old.begin, old_len) == 0) {
-            size_t n = sv_length(dst) < repl_len ? sv_length(dst) : repl_len;
+            int n = sv_length(dst) < repl_len ? sv_length(dst) : repl_len;
             strncpy(dst.begin, replacement.begin, n);
             dst.begin += n;
             viu.begin += old_len;
@@ -381,10 +474,10 @@ static void sv_replace_into_cstring(strviu dst, strviu viu, const char *old, con
  * with each StrViu old replaced to replacement
  */
 static char *sv_replace_to_heap_sv(strviu viu, strviu old, strviu replacement) {
-    size_t old_len = sv_length(old);
-    size_t repl_len = sv_length(replacement);
-    size_t size = sv_length(viu) + 1;
-    size_t add_size = repl_len > 128 ? repl_len : 128;
+    int old_len = sv_length(old);
+    int repl_len = sv_length(replacement);
+    int size = sv_length(viu) + 1;
+    int add_size = repl_len > 128 ? repl_len : 128;
     char *res = (char *) malloc(size);
     if (!res)
         return NULL;
@@ -431,16 +524,27 @@ static char *sv_replace_to_heap_cstring(strviu viu, const char *old, const char 
 
 /** Copies the StrViu viu into the cstring dst */
 static void sv_cpy(char *dst, strviu viu) {
-    size_t len = sv_length(viu);
+    int len = sv_length(viu);
     strncpy(dst, viu.begin, len);
     dst[len] = 0;
 }
 
-/** Copies the StrViu viu into the cstring dst, but maximal max_characters_n wide */
-static void sv_ncpy(char *dst, strviu viu, size_t max_characters_n) {
-    size_t len = sv_length(viu) < max_characters_n ? sv_length(viu) : max_characters_n-1;
+/** Concatenates viu behind dst */
+static void sv_cat(char *dst, strviu viu) {
+    sv_cpy(dst + strlen(dst), viu);
+}
+
+/** Copies the StrViu viu into the cstring dst, but maximal max_buffer_n wide */
+static void sv_ncpy(char *dst, strviu viu, int max_buffer_n) {
+    int len = sv_length(viu) < max_buffer_n ? sv_length(viu) : max_buffer_n-1;
     strncpy(dst, viu.begin, len);
     dst[len] = 0;
+}
+
+/** Concatenates viu behind dst, but maximal max_buffer_n wide for the whole string */
+static void sv_ncat(char *dst, strviu viu, int max_buffer_n) {
+    int max_viu = max_buffer_n - strlen(dst);
+    sv_ncpy(dst + strlen(dst), viu, max_viu);
 }
 
 /** @return: The StrViu viu into a cstring on the heap */
@@ -478,7 +582,7 @@ static bool sv_begins_with_cstring(strviu viu, const char *cmp) {
 static bool sv_ends_with(strviu viu, strviu cmp) {
     if (sv_length(viu) < sv_length(cmp))
         return false;
-    size_t len = sv_length(cmp);
+    int len = sv_length(cmp);
     return strncmp(viu.end - len, cmp.begin, len) == 0;
 }
 

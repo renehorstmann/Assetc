@@ -11,7 +11,7 @@ static void push_string(StrArray *array, const char *str) {
 }
 
 char *generate_file_init_on_heap(int id, const char *name, const char *data, size_t size) {
-    StrArray str = DynArray_INIT;
+    StrArray str = {0};
 
     char id_str[12]; // max length for an 32 bit int
     sprintf(id_str, "%d", id);
@@ -39,7 +39,7 @@ char *generate_file_init_on_heap(int id, const char *name, const char *data, siz
 }
 
 char *generate_list_init_on_heap(int id) {
-    StrArray str = DynArray_INIT;
+    StrArray str = {0};
 
     char id_str[12]; // max length for an 32 bit int
     sprintf(id_str, "%d", id);
@@ -57,7 +57,7 @@ char *generate_list_init_on_heap(int id) {
 }
 
 char *generate_map_init_on_heap(int id) {
-    StrArray str = DynArray_INIT;
+    StrArray str = {0};
 
     char id_str[12]; // max length for an 32 bit int
     sprintf(id_str, "%d", id);

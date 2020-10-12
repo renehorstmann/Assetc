@@ -25,11 +25,11 @@ typedef struct class_name ## _Item {\
     value_type value;\
     struct class_name ## _Item *next;\
 } class_name ## _Item;\
-typedef struct class_name {\
+typedef struct {\
     class_name ## _Item **map;\
     int map_size;\
 } class_name;\
-typedef struct class_name ## _Iter {\
+typedef struct {\
     class_name *hashmap;\
     int hash_row;\
     class_name ## _Item *next;\

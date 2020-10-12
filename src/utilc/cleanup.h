@@ -11,7 +11,7 @@
 typedef void (*CLEAN_UP_FUNCTION_TYPE)(void *);
 
 /** CleanUp class to collect items to clean/ free, and free it e. g. at the end of a function */
-typedef struct CleanUp {
+typedef struct {
     void *data[CLEAN_UP_MAX_ITEMS];
     CLEAN_UP_FUNCTION_TYPE data_fun[CLEAN_UP_MAX_ITEMS];
     int size;

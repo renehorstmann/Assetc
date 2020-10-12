@@ -41,7 +41,7 @@ static char *strcat_into_v(char *dst, const char **strings) {
  */
 static char *strcat_into_heap_v(const char **strings) {
     const char **it = strings;
-    size_t size = 1;
+    int size = 1;
     while(*it)
         size += strlen(*it++);
     char *res = (char *) malloc(size);
@@ -57,9 +57,9 @@ static char *strcat_into_heap_v(const char **strings) {
  */
 struct sp_pool {
     char **data;
-    size_t data_size;
-    size_t data_capacity;
-    void *(*malloc)(size_t size);
+    int data_size;
+    int data_capacity;
+    void *(*malloc)(int size);
     void (*free)(void *data);
 };
 
@@ -95,10 +95,10 @@ static void sp_free() {
 }
 
 /** Allocates an string and appends it to the pool */
-static char *sp_malloc(size_t size) {
+static char *sp_malloc(int size) {
     char *res = (char *) (sp_pool_used ? sp_pool_used->malloc(size) : malloc(size));
     if(!res) {
-        fprintf(stderr, "sp_malloc(%zu) failed in file %s\n", size, __FILE__);
+        fprintf(stderr, "sp_malloc(%d) failed in file %s\n", size, __FILE__);
         raise(SIGABRT);
     }
     sp_pool_append(res);
@@ -129,7 +129,7 @@ static char *sp_clone(const char *src) {
 }
 
 /** Clones a string and allocates added_length more bytes */
-static char *sp_clone_n(size_t added_length, const char *src) {
+static char *sp_clone_n(int added_length, const char *src) {
     char *res = sp_malloc(strlen(src) + added_length + 1);
     strcpy(res, src);
     return res;
@@ -137,7 +137,7 @@ static char *sp_clone_n(size_t added_length, const char *src) {
 
 /** Concatenates the strings together (strings must end with a NULL) */
 static char *sp_cat_v(const char **strings) {
-    size_t size = 1;
+    int size = 1;
     const char **it = strings;
     while(*it)
         size += strlen(*it++);
@@ -153,8 +153,8 @@ static char *sp_cat_v(const char **strings) {
  * Concatenates all given strings together (strings must end with a NULL).
  * added_length more bytes will be allocated
  */
-static char *sp_cat_n_v(size_t added_length, const char **strings) {
-    size_t size = 0;
+static char *sp_cat_n_v(int added_length, const char **strings) {
+    int size = 0;
     const char **it = strings;
     while(*it)
         size += strlen(*it++);
@@ -174,11 +174,11 @@ static char *sp_iter(const char *src, int begin, int end, int step) {
     if(end <= 0)
         end += (int) strlen(src);
     assert(begin < end && "sp_iter failed");
-    size_t range_len = strlen(src+begin);
+    int range_len = strlen(src+begin);
     if(end-begin < range_len)
         range_len = end-begin;
 
-    size_t size = (size_t) range_len / abs(step);
+    int size = (int) range_len / abs(step);
     char *res = sp_malloc(size+1);
     if(step > 0) {
         char *it = res;
@@ -207,7 +207,7 @@ static char *sp_replace(const char *src, const char *from, const char *to) {
         } else
             it_src++;
     }
-    size_t size = strlen(src) - cnt * strlen(from) + cnt * strlen(to) + 1;
+    int size = strlen(src) - cnt * strlen(from) + cnt * strlen(to) + 1;
     char *res = sp_malloc(size);
     it_src = src;
     char *it_res = res;

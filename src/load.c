@@ -27,7 +27,7 @@ static bool is_dir(const char *path) {
 }
 
 static void load_dir_r(File **out_files, size_t *out_files_size, const char *root_dir, const char *sub_dir) {
-    FileArray files = DynArray_INIT;
+    FileArray files = {0};
 
     char *current_dir = sp_cat(root_dir, sub_dir);
     
