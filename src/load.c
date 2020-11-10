@@ -60,7 +60,6 @@ static void load_dir_r(File **out_files, size_t *out_files_size, const char *roo
         }
     }
     closedir(dir);
-    sp_free();
 
     *out_files = files.array;
     *out_files_size = files.size;
@@ -68,4 +67,5 @@ static void load_dir_r(File **out_files, size_t *out_files_size, const char *roo
 
 void load_dir(File **out_files, size_t *out_files_size, const char *root_dir) {
     load_dir_r(out_files, out_files_size, root_dir, "");
+    sp_free();
 }
