@@ -10,6 +10,11 @@
 
 @file_init@
 
+static const char *name_list[] = {
+@name_list@
+        NULL
+};
+
 static unsigned hash(const char *key) {
     unsigned hash = 5381;
     int c;
@@ -53,6 +58,11 @@ static void map_init() {
 @list_init@
 
 @map_init@
+}
+
+
+const char **@asset@_list() {
+    return name_list;
 }
 
 @asset@ @asset@_get(const char *file) {

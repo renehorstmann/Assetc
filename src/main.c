@@ -11,10 +11,13 @@
 #define USE_TEMPLATES_FROM_ASSET
 
 #ifdef USE_TEMPLATES_FROM_ASSET
+
 #include "asset.h"
+
 #endif
 
 static const char *program_name;
+
 static void print_help() {
     fprintf(stderr, "Usage: %s dir [-h] [-o name]\n"
                     "       -h: will clone asset.h into the\n"
@@ -23,7 +26,7 @@ static void print_help() {
                     "           asset source and header file\n"
                     "           (default is asset.c|.h)\n"
                     "       -n: sets the namespace for globals\n",
-                    program_name);
+            program_name);
     exit(EXIT_FAILURE);
 }
 
@@ -70,27 +73,27 @@ struct args {
 static struct args args_parse(int argc, char **argv) {
     struct args res = {false, "asset", NULL, NULL};
 
-    for(int i=1; i<argc; i++) {
-        if(argv[i][0] != '-') {
-            if(res.dir)
+    for (int i = 1; i < argc; i++) {
+        if (argv[i][0] != '-') {
+            if (res.dir)
                 print_help();
             res.dir = argv[i];
 
         } else {
-            if(strcmp(argv[i], "-h") == 0) {
+            if (strcmp(argv[i], "-h") == 0) {
                 res.clone_header = true;
-            } else if(strcmp(argv[i], "-o") == 0) {
-                if(i == argc-1 || argv[i+1][0] == '-')
+            } else if (strcmp(argv[i], "-o") == 0) {
+                if (i == argc - 1 || argv[i + 1][0] == '-')
                     print_help();
                 res.file_name = argv[++i];
-            } else if(strcmp(argv[i], "-n") == 0) {
+            } else if (strcmp(argv[i], "-n") == 0) {
                 res.namespace = argv[++i];
             } else
                 print_help();
         }
     }
 
-    if(!res.dir)
+    if (!res.dir)
         print_help();
 
     // check strlen(res.out_name) < 40
@@ -114,13 +117,14 @@ int main(int argc, char **argv) {
             strcat(dir, "/");
 
         load_dir(&files, &files_size, dir);
-        if(!files)
+        if (!files)
             print_help();
         free(dir);
     }
 
     // header
-    if(args.clone_header) {
+    if (args.clone_header) {
+        puts("creating header...");
         char *header = apply_header(get_template_header(), args.file_name, args.namespace);
 
         char *name = New(char, strlen(args.file_name) + 3); // + .h\0
@@ -137,6 +141,7 @@ int main(int argc, char **argv) {
 
     // source
     {
+        puts("creating source...");
         char *source = apply_source(get_template_source(), args.file_name, args.namespace, files, files_size);
 
         char *name = New(char, strlen(args.file_name) + 3); // + .c\0
@@ -151,7 +156,7 @@ int main(int argc, char **argv) {
         free(source);
     }
 
-    for(int i=0; i<files_size; i++)
+    for (int i = 0; i < files_size; i++)
         File_kill(&files[i]);
     free(files);
     return 0;

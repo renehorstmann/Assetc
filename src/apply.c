@@ -117,6 +117,26 @@ char *apply_source(const char *template, const char *file_name, const char *name
         str_array_kill(&fi);
     }
 
+    // name list
+    {
+        StrArray ni = {0};
+        for(int i = 0; i < files_size; i++) {
+            push_string(&ni, "        \"");
+            push_string(&ni, files[i].name);
+            push_string(&ni, "\",");
+            if(i < files_size-1)
+                str_array_push(&ni, '\n');
+        }
+        str_array_push(&ni, '\0');
+
+        res = sv_replace_to_heap_cstring(tmp, "@name_list@", ni.array);
+        tmp = ToStrViu(res);
+
+        free(to_free);
+        to_free = res;
+        str_array_kill(&ni);
+    }
+
     // list init
     {
         StrArray li = {0};

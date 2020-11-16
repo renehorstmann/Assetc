@@ -13,7 +13,7 @@ void File_kill(File *self) {
 static void open_file_as_string(char **out_string, size_t *out_size, const char *filename) {
     char *text = NULL;
     FILE *file = fopen(filename, "rb");
-    long length = 0;
+    long length = -1;
     if (file) {
         fseek(file, 0, SEEK_END);
         length = ftell(file);
@@ -35,8 +35,9 @@ File File_load(const char *dir, const char *file) {
     open_file_as_string(&string, &size, file_path);
     free(file_path);
 
-    if(size == 0)
+    if(size == -1)
         return (File) {0};
+
     char *name = New(char, strlen(file)+1);
     strcpy(name, file);
     return (File) {name, string, size};

@@ -8,10 +8,15 @@
  * Simple struct that holds the memory location and size of an compiled asset file.
  * data[size] will be 0, so a text file will be a valid C string.
  */
-typedef struct asset {
+typedef struct {
     const char *data;
     size_t size;
 } asset;
+
+/**
+ * Returns a NULL terminated list of all file names in this asset.
+ */
+const char **asset_list();
 
 /**
  * Returns the memory location and size of the compiled file.
